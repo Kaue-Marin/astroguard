@@ -39,8 +39,22 @@ onMounted(() => {
     shininess: 15
   });
 
+
   const earthMesh = new THREE.Mesh(geometry, material);
   earthGroup.add(earthMesh);
+
+  const atmosphereGeometry = new THREE.SphereGeometry(1.02, 64, 64);
+  const atmosphereMaterial = new THREE.MeshPhongMaterial({
+
+    color: 0x00aaff,      
+    transparent: true,    
+    opacity: 0.3,         
+    side: THREE.DoubleSide, 
+    blending: THREE.AdditiveBlending, 
+    depthWrite: false    
+  });
+  const atmosphereMesh = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+  earthGroup.add(atmosphereMesh);
 
   const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
   sunLight.position.set(5, 3, 5);
@@ -49,9 +63,11 @@ onMounted(() => {
   const ambientLight = new THREE.AmbientLight(0x404040, 1.0); 
   scene.add(ambientLight);
 
+
   function animate() {
     requestAnimationFrame(animate);
     earthMesh.rotation.y += 0.002;
+    atmosphereMesh.rotation.y += 0.0025; 
     controls.update();
     renderer.render(scene, camera);
   }
